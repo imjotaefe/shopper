@@ -33,12 +33,5 @@ export class FlowGaugeController {
   async listReports(
     @Param('id') id: number,
     @Query() params: { measure_type: string },
-  ) {
-    // return this.flowGaugeService.newReport({
-    //   customer_code,
-    //   image,
-    //   measure_datetime,
-    //   measure_type,
-    // });
-  }
+  ) {}
 }
