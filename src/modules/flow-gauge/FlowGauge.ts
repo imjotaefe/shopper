@@ -25,7 +25,9 @@ export const flowGaugeSchema = z
     measure_datetime: z.string({
       message: "O campo 'measure_datetime' deve ser uma string",
     }),
-    measure_type: z.enum(measure_type),
+    measure_type: z.enum(measure_type, {
+      message: "O campo 'measure_type' deve ser 'WATER' ou 'GAS'",
+    }),
   })
   .required();
 
