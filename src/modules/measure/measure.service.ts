@@ -11,6 +11,11 @@ export class MeasureService {
 
   async createMeasure(data: createMeasureDTO) {
     const { customer_code, image, measure_datetime, measure_type } = data;
+
+    const customer = await this.repository.getCustomer(customer_code);
+    if (!customer) {
+      await this.repository.createCustomer(customer_code);
+    }
     const measureFoundThisMonth =
       await this.repository.getMeasureByCustomerCodeMonthAndType({
         customer_code: customer_code,

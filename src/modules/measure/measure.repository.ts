@@ -12,6 +12,22 @@ import {
 export class MeasureRepository {
   constructor(private prisma: PrismaService) {}
 
+  async getCustomer(uuid: string) {
+    return await this.prisma.customer.findFirst({
+      where: {
+        customer_code: uuid,
+      },
+    });
+  }
+
+  async createCustomer(uuid: string) {
+    return await this.prisma.customer.create({
+      data: {
+        customer_code: uuid,
+      },
+    });
+  }
+
   async createMeasure({ measureData, imageUrl, measureValue }: CreateMeasure) {
     const { customer_code, measure_datetime, measure_type } = measureData;
     return await this.prisma.measure.create({
