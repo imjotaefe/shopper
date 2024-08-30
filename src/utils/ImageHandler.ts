@@ -1,9 +1,19 @@
-import { FileManager } from 'src/utils/FileManager';
+import { FileManager } from '../utils/FileManager';
 import { GeminiFileManager } from '../services/Gemini/GeminiFileManager';
 import { GeminiGenerativeAI } from '../services/Gemini/GeminiGenerativeAI';
-import { createMeasureDTO, measure_type } from 'src/modules/measure/Measure';
+import { createMeasureDTO } from '../modules/measure/Measure';
 import { CustomException } from './CustomException';
+import { UploadFileResponse } from '@google/generative-ai/dist/server/server';
 
+interface ImageHandleConstructor {
+  image: string;
+  measure_type: createMeasureDTO['measure_type'];
+}
+
+interface MeasureFromImage {
+  measure: string;
+  temp_url: string;
+}
 export class ImageHandler {
   private geminiFileManager: GeminiFileManager;
   private systemFileManager: FileManager;
@@ -12,13 +22,7 @@ export class ImageHandler {
   private image: string;
   private measure_type: createMeasureDTO['measure_type'];
 
-  constructor({
-    image,
-    measure_type,
-  }: {
-    image: string;
-    measure_type: createMeasureDTO['measure_type'];
-  }) {
+  constructor({ image, measure_type }: ImageHandleConstructor) {
     this.geminiFileManager = new GeminiFileManager();
     this.systemFileManager = new FileManager();
     this.generativeAI = new GeminiGenerativeAI();
@@ -27,7 +31,7 @@ export class ImageHandler {
     this.measure_type = measure_type;
   }
 
-  async getMeasureFromImage() {
+  async getMeasureFromImage(): Promise<MeasureFromImage> {
     try {
       await this.systemFileManager.createTempFile({
         base64File: this.image,
@@ -54,16 +58,16 @@ export class ImageHandler {
     }
   }
 
-  private async uploadImage() {
+  private async uploadImage(): Promise<UploadFileResponse> {
     const uploadResponse = await this.geminiFileManager.uploadImage({
       filePath: `temp/${this.tempFileName}.jpeg`,
-      displayName: `${measure_type} measure image`,
+      displayName: `${this.measure_type} measure image`,
     });
 
     return uploadResponse;
   }
 
-  private async generateImage() {
+  private async generateImage(): Promise<string> {
     const generatedText = await this.generativeAI.getTextFromImage({
       image: this.image,
     });

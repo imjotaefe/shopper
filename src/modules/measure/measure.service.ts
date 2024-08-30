@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { confirmMeasureDTO, createMeasureDTO } from './Measure';
 import { MeasureRepository } from './measure.repository';
-import { CustomException } from 'src/utils/CustomException';
-import { ImageHandler } from 'src/utils/ImageHandler';
+import { CustomException } from '../../utils/CustomException';
+import { ImageHandler } from '../../utils/ImageHandler';
+import { ListByCustomerCodeAndMeasureType } from './types';
 
 @Injectable()
 export class MeasureService {
@@ -78,7 +79,10 @@ export class MeasureService {
     };
   }
 
-  async listMeasures({ customer_code, measure_type }) {
+  async listMeasures({
+    customer_code,
+    measure_type,
+  }: ListByCustomerCodeAndMeasureType) {
     const measures = await this.repository.listByCustomerCodeAndMeasureType({
       customer_code,
       measure_type: measure_type || undefined,

@@ -1,7 +1,7 @@
-import { measure_type } from 'src/modules/measure/Measure';
+import { measure_type } from '../../modules/measure/Measure';
 import { CustomException } from '../CustomException';
 
-export function validateQuery(values: unknown) {
+export function validateQuery(values: unknown): unknown {
   const typesToCheck = String(measure_type).split(',');
   const measureType = values['measure_type'];
   const upperedMeasureType = String(measureType).toUpperCase();

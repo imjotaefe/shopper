@@ -1,5 +1,8 @@
 import { Gemini } from './Gemini';
 
+interface GetTextFromImage {
+  image: string;
+}
 export class GeminiGenerativeAI {
   private gemini: Gemini;
 
@@ -7,7 +10,7 @@ export class GeminiGenerativeAI {
     this.gemini = new Gemini();
   }
 
-  public async getTextFromImage({ image }: { image: string }) {
+  public async getTextFromImage({ image }: GetTextFromImage) {
     return await this.gemini.getModel().generateContent([
       {
         inlineData: { data: image, mimeType: 'image/png' },

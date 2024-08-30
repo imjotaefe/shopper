@@ -1,21 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/database/prisma.service';
-import { DateHandler } from 'src/utils/DateHandler';
-import { createMeasureDTO } from './Measure';
+import { PrismaService } from '../../database/prisma.service';
+import { DateHandler } from '../../utils/DateHandler';
+import {
+  CreateMeasure,
+  GetMeasureByCustomerCodeMonthAndType,
+  ListByCustomerCodeAndMeasureType,
+  UpdateMeasureValue,
+} from './types';
 
 @Injectable()
 export class MeasureRepository {
   constructor(private prisma: PrismaService) {}
 
-  async createMeasure({
-    measureData,
-    imageUrl,
-    measureValue,
-  }: {
-    measureData: createMeasureDTO;
-    imageUrl: string;
-    measureValue: number;
-  }) {
+  async createMeasure({ measureData, imageUrl, measureValue }: CreateMeasure) {
     const { customer_code, measure_datetime, measure_type } = measureData;
     return await this.prisma.measure.create({
       data: {
@@ -35,7 +32,7 @@ export class MeasureRepository {
     customer_code,
     measure_type,
     measure_datetime,
-  }) {
+  }: GetMeasureByCustomerCodeMonthAndType) {
     const dateHandler = new DateHandler().setDateWithString(measure_datetime);
 
     return await this.prisma.measure.findFirst({
@@ -50,7 +47,10 @@ export class MeasureRepository {
     });
   }
 
-  async listByCustomerCodeAndMeasureType({ customer_code, measure_type }) {
+  async listByCustomerCodeAndMeasureType({
+    customer_code,
+    measure_type,
+  }: ListByCustomerCodeAndMeasureType) {
     const measures = await this.prisma.measure.findMany({
       where: {
         customer_code: customer_code,
@@ -68,7 +68,10 @@ export class MeasureRepository {
     });
   }
 
-  async updateMeasureValue({ measure_uuid, measure_value }) {
+  async updateMeasureValue({
+    measure_uuid,
+    measure_value,
+  }: UpdateMeasureValue) {
     return await this.prisma.measure.update({
       where: {
         measure_uuid: measure_uuid,

@@ -15,7 +15,7 @@ import {
   createMeasureDTO,
   measureSchema,
 } from './Measure';
-import { ValidationPipe } from 'src/utils/Validation/ValidationPipe';
+import { ValidationPipe } from '../../utils/Validation/ValidationPipe';
 
 @Controller('measure')
 export class MeasureController {
@@ -49,9 +49,8 @@ export class MeasureController {
   @UsePipes(new ValidationPipe(measureSchema))
   async listMeasures(
     @Param('customer_code') customer_code: string,
-    @Query() params: { measure_type: string },
+    @Query() params: { measure_type: createMeasureDTO['measure_type'] },
   ) {
-    console.log(params);
     return await this.measureService.listMeasures({
       customer_code: customer_code,
       measure_type: params.measure_type,
