@@ -1,11 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { confirmMeasureDTO, createMeasureDTO } from './Measure';
-import { GeminiFileManager } from 'src/services/Gemini/GeminiFileManager';
-import { FileManager } from 'src/utils/FileManager';
-import { GeminiGenerativeAI } from 'src/services/Gemini/GeminiGenerativeAI';
 import { MeasureRepository } from './measure.repository';
 import { CustomException } from 'src/utils/CustomException';
-import crypto from 'crypto';
+import { ImageHandler } from 'src/utils/ImageHandler';
 
 @Injectable()
 export class MeasureService {
@@ -27,27 +24,28 @@ export class MeasureService {
         statusCode: 409,
       });
     }
-    // const fileUpload = new GeminiFileManager();
 
-    // const fileManager = new FileManager();
-    // const tempFileName = crypto.randomUUID();
+    const { measure, temp_url } = await new ImageHandler({
+      image,
+      measure_type,
+    }).getMeasureFromImage();
 
-    // await fileManager.createTempFile({
-    //   base64File: image,
-    //   fileName: tempFileName,
-    // });
+    try {
+      await this.repository.createMeasure({
+        measureData: data,
+        imageUrl: temp_url,
+        measureValue: Number(measure),
+      });
 
-    // const uploadResponse = await fileUpload.uploadImage({
-    //   fileName: tempFileName,
-    //   displayName: `${measure_type} measure image`,
-    // });
-    // if (uploadResponse) {
-    //   await fileManager.cleanTempFolder();
-    // }
-    // const generativeAI = new GeminiGenerativeAI();
-    // const generatedText = await generativeAI.getTextFromImage({ image: image });
-    // console.log(uploadResponse.file.uri);
-    // console.log(generatedText.response.text());
+      console.log(measure, temp_url);
+    } catch (error) {
+      console.log(error);
+      throw new CustomException({
+        errorCode: 'ERROR_DURING_CREATION',
+        errorDescription: 'Erro durante a criação do measure',
+        statusCode: 404,
+      });
+    }
   }
 
   async confirmMeasure(data: confirmMeasureDTO) {

@@ -12,13 +12,13 @@ export class GeminiFileManager {
   }
 
   public async uploadImage({
-    fileName,
+    filePath,
     displayName,
   }: {
-    fileName: string;
+    filePath: string;
     displayName: string;
   }) {
-    return await this.fileManager.uploadFile(`temp/${fileName}.jpeg`, {
+    return await this.fileManager.uploadFile(filePath, {
       mimeType: 'image/jpeg',
       displayName: displayName,
     });

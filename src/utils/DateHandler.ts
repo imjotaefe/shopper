@@ -1,5 +1,5 @@
 export class DateHandler {
-  dateToHandle: Date;
+  private dateToHandle: Date;
 
   setDate(newDate: Date) {
     this.dateToHandle = newDate;

@@ -1,10 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
 import { DateHandler } from 'src/utils/DateHandler';
+import { createMeasureDTO } from './Measure';
 
 @Injectable()
 export class MeasureRepository {
   constructor(private prisma: PrismaService) {}
+
+  async createMeasure({
+    measureData,
+    imageUrl,
+    measureValue,
+  }: {
+    measureData: createMeasureDTO;
+    imageUrl: string;
+    measureValue: number;
+  }) {
+    const { customer_code, measure_datetime, measure_type } = measureData;
+    return await this.prisma.measure.create({
+      data: {
+        has_confirmed: false,
+        image_url: imageUrl,
+        measure_type: measure_type,
+        measure_value: measureValue,
+        created_at: new Date(),
+        measure_datetime: measure_datetime,
+        customer_code: customer_code,
+        measure_uuid: crypto.randomUUID(),
+      },
+    });
+  }
 
   async getMeasureByCustomerCodeMonthAndType({
     customer_code,
