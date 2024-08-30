@@ -1,7 +1,7 @@
 import { ZodSchema } from 'zod';
 import { CustomException } from '../CustomException';
 
-export function validateBody(values: unknown, schema: ZodSchema) {
+export function validateBody(values: unknown, schema: ZodSchema): unknown {
   try {
     const parsedValue = schema.parse(values);
     return parsedValue;

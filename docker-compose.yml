@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  app:
+    build: .  # Build the Docker image using the Dockerfile in the current directory
+    ports:
+      - "3000:3000"  # Forward the container's port 3333 to the host machine's port 3333 for accessing the backend service
+    depends_on:
+      - postgres  # Ensure that the backend service starts after the database service is up and running
+    env_file:
+      - .env  # Load e
+
+  postgres:
+    image: bitnami/postgresql:latest
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_USER=docker
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_DB=shopper
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public
+    volumes:
+      - postgres_data:/bitnami/postgresql
+
+volumes:
+  postgres_data:

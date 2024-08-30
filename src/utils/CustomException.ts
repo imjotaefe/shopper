@@ -11,23 +11,23 @@ interface StatusCodeDictionary {
 }
 
 /**
- * Dicionário que mapeia todos os status HTTP.
+ * Dictionary to map selected http status
  *
  * @type {StatusCodeDictionary}
  */
 const statusCodeDictionary: StatusCodeDictionary = {
   /**
-   * Status para requisição inválida.
+   * Status for invalid request.
    */
   400: HttpStatus.BAD_REQUEST,
 
   /**
-   * Status para request inválida.
+   * Status for not found resource.
    */
   404: HttpStatus.NOT_FOUND,
 
   /**
-   * Status para conflito de informações.
+   * Status for conflicts of information.
    */
   409: HttpStatus.CONFLICT,
 };
