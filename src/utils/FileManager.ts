@@ -1,16 +1,18 @@
 const fs = require('node:fs/promises');
 const path = require('node:path');
 
+interface CreateTempFile {
+  base64File: string;
+  fileName: string;
+}
+
 export class FileManager {
   async createTempFile({
     base64File,
     fileName,
-  }: {
-    base64File: string;
-    fileName: string;
-  }) {
+  }: CreateTempFile): Promise<void> {
     try {
-      return await fs.writeFile(
+      await fs.writeFile(
         path.join('temp', `${fileName}.jpeg`),
         base64File,
         'base64',
@@ -23,7 +25,7 @@ export class FileManager {
     }
   }
 
-  async cleanTempFolder() {
+  async cleanTempFolder(): Promise<void> {
     try {
       const tempFolder = path.join(process.cwd(), 'temp');
       const files = await fs.readdir(tempFolder);

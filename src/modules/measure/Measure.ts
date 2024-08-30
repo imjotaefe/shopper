@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export interface FlowGaugeResponse {
+export interface MeasureResponse {
   image_url: string;
   measure_value: number;
   measure_uuid: string;
@@ -8,7 +8,7 @@ export interface FlowGaugeResponse {
 
 export const measure_type = ['WATER', 'GAS'] as const;
 
-export const flowGaugeSchema = z
+export const measureSchema = z
   .object({
     image: z
       .string({ message: "O campo 'image' deve ser uma string" })
@@ -31,4 +31,16 @@ export const flowGaugeSchema = z
   })
   .required();
 
-export type createFlowGaugeDTO = z.infer<typeof flowGaugeSchema>;
+export const confirmMeasure = z
+  .object({
+    measure_uuid: z.string({
+      message: "O campo 'measure_uuid' deve ser uma string",
+    }),
+    confirmed_value: z.number({
+      message: "O campo 'confirmed_value' deve ser um número",
+    }),
+  })
+  .required();
+
+export type createMeasureDTO = z.infer<typeof measureSchema>;
+export type confirmMeasureDTO = z.infer<typeof confirmMeasure>;
